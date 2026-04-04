@@ -8,15 +8,15 @@ console.log('usersController type:', typeof usersController);
 console.log('usersController value:', usersController);
 const app: Application = express();
 
-// Middleware
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// Routes
+
 app.use('/users', usersController);
 
-// Global Error Handler (must be last)
+
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
