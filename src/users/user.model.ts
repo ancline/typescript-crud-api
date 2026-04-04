@@ -1,5 +1,5 @@
 // src/users/user.model.ts
-import { Dataypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import type { Sequelize } from 'sequelize';
 
 export interface UserAttributes {
@@ -15,7 +15,7 @@ export interface UserAttributes {
 }
 
 export interface UserCreationAttributes
-    extends Optional<UserAttributes, 'id' | 'ceartedAt' | 'updatedAt'> {}
+    extends Optional<UserAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
 
 export class User
     extends Model<UserAttributes, UserCreationAttributes>
@@ -49,9 +49,17 @@ export default function (sequelize: Sequelize): typeof User {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            title: { 
+                type: DataTypes.STRING, 
+                allowNull: false 
+            },
             firstName: {
                 type: DataTypes.STRING,
                 allowNull: false,
+            },
+            lastName: { 
+                type: DataTypes.STRING, 
+                allowNull: false 
             },
             role: {
                 type: DataTypes.STRING,
@@ -60,7 +68,7 @@ export default function (sequelize: Sequelize): typeof User {
             createdAt: {
                 type: DataTypes.DATE,
                 allowNull: false,
-                default: DataTypes.NOW,
+                defaultValue: DataTypes.NOW,
             },
             updatedAt: {
                 type: DataTypes.DATE,
@@ -78,7 +86,7 @@ export default function (sequelize: Sequelize): typeof User {
           },
           scopes: {
             withHash: {
-                attributes: { include: [passwordHash] },
+                attributes: { include: ['passwordHash'] },
             },
           },
         }

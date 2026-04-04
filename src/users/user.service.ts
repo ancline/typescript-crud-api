@@ -1,3 +1,4 @@
+// src/users/user.service.ts
 import bcrypt from 'bcryptjs';
 import { db } from '../_helpers/db';
 import { Role } from '../_helpers/role';
@@ -6,9 +7,9 @@ import { User, UserCreationAttributes } from './user.model';
 export const userService = {
     getAll,
     getById,
-    create, 
+    create,
     update,
-    delete: _delete,
+    delete: _delete
 };
 
 async function getAll(): Promise<User[]> {
@@ -20,32 +21,46 @@ async function getById(id: number): Promise<User> {
 }
 
 async function create(params: UserCreationAttributes & { password: string }): Promise<void> {
+    // Check if email already exists
     const existingUser = await db.User.findOne({ where: { email: params.email } });
-    if(existingUser) {
+    if (existingUser) {
         throw new Error(`Email "${params.email}" is already registered`);
     }
 
+    // Hash password
     const passwordHash = await bcrypt.hash(params.password, 10);
 
+    // Create user
     await db.User.create({
         ...params,
         passwordHash,
-        role: params.role || Role.User,
+        role: params.role || Role.User
     } as UserCreationAttributes);
 }
 
-async fucntion update(id: number, params: Partial<UserCreationAttributes> & { password?: string }): Promise<void>{
+async function update(
+    id: number,
+    params: Partial<UserCreationAttributes> & { password?: string }
+): Promise<void> {
     const user = await getUser(id);
 
-    if(params.password){
-        params.passwordHash = await bcrypt.hash(params.password,10);
+    // Hash new password if provided
+    if (params.password) {
+        (params as any).passwordHash = await bcrypt.hash(params.password, 10);
         delete params.password;
     }
 
     await user.update(params as Partial<UserCreationAttributes>);
 }
 
-async function _delete(id:number): Promise<void> {
+async function _delete(id: number): Promise<void> {
     const user = await getUser(id);
     await user.destroy();
+}
+
+// Helper: get user or throw
+async function getUser(id: number): Promise<User> {
+    const user = await db.User.scope('withHash').findByPk(id);
+    if (!user) throw new Error('User not found');
+    return user;
 }
