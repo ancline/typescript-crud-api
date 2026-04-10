@@ -1,6 +1,6 @@
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = 'http://localhost:4000/api';
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
 
@@ -197,7 +197,7 @@ function getAuthHeader() {
 
 // Example: Fetch admin data
 async function loadAdminDashboard() {
-    const res = await fetch('http://localhost:3000/api/admin/dashboard', {
+    const res = await fetch('http://localhost:4000/api/admin/dashboard', {
         headers: getAuthHeader()
     });
     if (res.ok) {
@@ -213,7 +213,7 @@ async function loadAdminDashboard() {
 async function login(username, password) {
     let response;
     try {
-        response = await fetch('http://localhost:3000/api/login', {
+        response = await fetch('http://localhost:4000/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })

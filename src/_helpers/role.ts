@@ -1,5 +1,6 @@
-// src/_helpers/role.ts
-export enum Role {
-    Admin = 'Admin',
-    User = 'User'
-}
+export const Role = {
+    Admin: 'admin',
+    User: 'user'
+} as const;
+
+export type RoleType = typeof Role[keyof typeof Role];
